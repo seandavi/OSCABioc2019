@@ -20,6 +20,7 @@ knitr::opts_chunk$set(echo = TRUE,
                       message = FALSE, warning = FALSE, error = FALSE,
                       cache = FALSE)
 options(digits = 4)
+options(mc.cores = 2) # fix biocparallel or scater bug?
 ```
 
 # Orchestrating Single-Cell Analysis with Bioconductor: Workshop
@@ -104,7 +105,7 @@ devtools::install_github('irrationone/cellassign') # automated annotation of cel
 ```{r, echo = FALSE}
 suppressPackageStartupMessages({
     library(tidyr)
-    library(BiocParallel)
+    #library(BiocParallel)
     library(iSEE)
     library(TENxPBMCData)
     library(DropletUtils)
@@ -495,11 +496,11 @@ In this section, we will look to identify genes that are unique to each of our c
 
 For this analysis, we will limit ourselves to a top subset of highly variable genes in our `hvg_genes` set, purely for the sake of computation time. Furthermore, we will limit our consideration to genes with an *increased* log fold-change of at least 1.5 versus other clusters. We will also use the `BiocParallel` package to parallelize the computation and speed up our processing via the `BPPARAM` argument.
 
-```{r}
+```{r findMarkers, cache=FALSE}
 markers <- findMarkers(sce, clusters = colData(sce)$clusters,
                        subset.row = hvg_genes[1:250],
                        lfc = 1.5, direction = 'up', log.p = TRUE, 
-                       BPPARAM = BiocParallel::MulticoreParam())
+                       BPPARAM = BiocParallel::MulticoreParam(1))
 ```
 
 ```{r, include=FALSE}
