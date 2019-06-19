@@ -105,7 +105,7 @@ devtools::install_github('irrationone/cellassign') # automated annotation of cel
 ```{r, echo = FALSE}
 suppressPackageStartupMessages({
     library(tidyr)
-    #library(BiocParallel)
+    library(BiocParallel)
     library(iSEE)
     library(TENxPBMCData)
     library(DropletUtils)
